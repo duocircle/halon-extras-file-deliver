@@ -3,7 +3,7 @@
 This plugin provides file delivery (as an addition to the builtin SMTP/LMTP) to a configurable folder.
 The plugin leverages the [queue delivery plugin API](https://docs.halon.io/manual/plugins_native.html#id3).
 Max connection concurrency and rates are configured as usual, using [active queue pickup policies](https://docs.halon.io/manual/queue.html#queue-pickup-policies).
-Messages are written in RFC-822 format (.eml).
+Messages are written in RFC-822 format (.eml), optionally gzip compressed (.eml.gz).
 
 ## Installation
 
@@ -30,6 +30,8 @@ plugins:
   - id: file-deliver
     config:
       fsync: true
+      compress: gzip
+      compress_level: 6
       path: /var/halon/spool/output
       tmppath: /var/halon/spool/tmp
       threads: 4
@@ -53,7 +55,11 @@ transportgroups:
 Plugin options are:
 
 * fsync (boolean) default true
-* filename (string) default is `transactionid_queueid.eml` (sub-folders are supported)
+* compress (string) `none` or `gzip`, default is the `compress` setting in smtpd.yaml (`none`)
+* compress_level (number) 1 to 9, default is the `compress_level` setting in smtpd.yaml (6)
+* filename (string) default is `transactionid_queueid.eml`, or `.eml.gz` when compressing (sub-folders are supported)
+
+With `compress: gzip` the file is a gzip stream (RFC 1952), written to the temporary file and renamed into place as before.
 
 ```
 Try([

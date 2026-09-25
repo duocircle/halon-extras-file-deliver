@@ -21,7 +21,22 @@
             "type": "boolean",
             "description": "Sync file on disk before 250 OK",
             "default": true
+        },
+        "compress": {
+            "type": "string",
+            "enum": [
+                "none",
+                "gzip"
+            ],
+            "description": "Compress the written file",
+            "default": "none"
+        },
+        "compress_level": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "The gzip compression level",
+            "default": 6
         }
     }
 }
-  
